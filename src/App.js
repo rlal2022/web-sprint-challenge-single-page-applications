@@ -10,7 +10,7 @@ const App = () => {
         <h1>Lambda Eats</h1>
         <p>You can remove this code and create your own header</p>
         <Switch>
-          <Route exact path={"/Home"}>
+          <Route exact path={"/"}>
             <Home component={Home} />
           </Route>
           <Route path="/Form/" component={Form} />
