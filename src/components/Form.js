@@ -7,14 +7,15 @@ const Form = () => {
   const [form, setFormValues] = useState({
     name: "",
     size: "",
-    sauce: "",
+    sauce: false,
     pepperoni: false,
     chicken: false,
     bacon: false,
     cheese: false,
+    request: ''
   });
 
-  const [formErrors, setFormErrors] = useState({
+  const [errors, setErrors] = useState({
     name: "",
     size: "",
     sauce: "",
@@ -22,22 +23,30 @@ const Form = () => {
     chicken: "",
     bacon: "",
     cheese: "",
+    request: ""
   });
 
-  const formValidation = (name, value) => {
-    yup
-      .reach(formSchema, name)
-      .validate(value)
-      .then(() => setFormErrors({ ...formErrors, [name]: "" }))
-      .catch((err) =>
-        setFormErrors({ ...formErrors, [name]: err.formErrors[0] })
-      );
+  const setFormErrors = (name, value) => {
+yup
+.reach(formSchema, name)
+.validate(value)
+.then(() => {
+  setErrors({
+    ...errors, [name]: value
+  });
+}).catch((error) => {
+  setErrors({
+    ...errors, [name]: error.errors[0]
+  })
+})
+
   };
 
   const onChange = (e) => {
     const { name, value, checked, type } = e.target;
     const newVal = type === "checkbox" ? checked : value;
-    // formValidation({ ...form, [name]: newVal });
+    setFormErrors(name, newVal);
+    setFormValues({ ...form, [name]: newVal });
   };
 
   const submitForm = (e) => {
@@ -46,25 +55,27 @@ const Form = () => {
     axios
       .post("https://reqres.in/api/orders", form)
       .then((res) => {
-        console.log(res);
+        console.log(res.data)
       })
-      .catch((err) => console.error(err));
-    // .finally(setFormValues(initialFormValues));
+      .catch((err) => console.error(err))
   };
+
+
 
   return (
     <div>
-      <p>{formErrors}</p>
       <h2>Lets start building your pizza!</h2>
-      <form onSubmit={submitForm} id="byo-form">
+      <form onSubmit={submitForm} id="pizza-form">
         <label>Name</label>
         <input
           type="text"
           name="name"
           placeholder="Name"
+          id="name-input"
           value={form.name}
           onChange={onChange}
         />
+        <div>{errors.name}</div>
 
         <label>Email</label>
         <input
@@ -77,7 +88,7 @@ const Form = () => {
 
         <label>
           Pizza Size:
-          <select value={form.size} name="size" onChange={onChange}>
+          <select value={form.size} name="size" id="size-dropdown" onChange={onChange}>
             <option value="small">Small - 10" </option>
             <option value="medium">Medium - 12"</option>
             <option value="large">Large - 16"</option>
@@ -131,7 +142,7 @@ const Form = () => {
           <input
             onChange={onChange}
             type="text"
-            id="specialreq"
+            id="special-text"
             name="request"
             value={form.request}
           />

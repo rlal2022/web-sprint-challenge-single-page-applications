@@ -3,8 +3,8 @@ import * as yup from "yup";
 const formSchema = yup.object().shape({
   name: yup
     .string()
-    .required("Please enter your name for this order")
-    .min(2, "Name has to be at least 2 characters"),
+    .required("name is required")
+    .min(2, "name must be at least 2 characters"),
   email: yup.string().required("A valid email is required"),
   size: yup
     .string()

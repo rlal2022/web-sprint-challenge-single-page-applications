@@ -9,12 +9,13 @@ const App = () => {
       <div>
         <h1>Bloomtech Eats</h1>
         <div>
-          <nav>
-            <Link to="/form">Order Here</Link>
+          <nav>  
             <Link to="/">Home</Link>
+            <Link to="/pizza"><button id="order-pizza"></button></Link>
+          Order Here
           </nav>
 
-          <Route exact path="/" component={Home}></Route>
+          <Route path="/" component={Home}></Route>
           <Route path="/pizza" component={Form}></Route>
         </div>
       </div>
