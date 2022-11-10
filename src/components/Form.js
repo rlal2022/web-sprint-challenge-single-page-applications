@@ -1,22 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import * as yup from "yup";
+import formSchema from "../validation/formSchema";
 
-const Form = (props) => {
-  const [formValues, setFormValues] = useState(initialFormValues);
-  const [formErrors, setFormErrors] = useState(inititalFormErrors);
-  const [form, setForm] = useState([]);
-
-  const submitForm = (e) => {
-    e.preventDefault();
-    axios
-      .post("https://reqres.in/api/orders", formValues)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => console.error(err));
-  };
-
-  const initialFormValues = {
+const Form = () => {
+  const [form, setFormValues] = useState({
     name: "",
     size: "",
     sauce: "",
@@ -24,12 +12,9 @@ const Form = (props) => {
     chicken: false,
     bacon: false,
     cheese: false,
-    arugula: false,
-    olives: false,
-    jalapenos: false,
-  };
+  });
 
-  const initialFormErrors = {
+  const [formErrors, setFormErrors] = useState({
     name: "",
     size: "",
     sauce: "",
@@ -37,21 +22,47 @@ const Form = (props) => {
     chicken: "",
     bacon: "",
     cheese: "",
-    arugula: "",
-    olives: "",
-    jalapenos: "",
+  });
+
+  const formValidation = (name, value) => {
+    yup
+      .reach(formSchema, name)
+      .validate(value)
+      .then(() => setFormErrors({ ...formErrors, [name]: "" }))
+      .catch((err) =>
+        setFormErrors({ ...formErrors, [name]: err.formErrors[0] })
+      );
+  };
+
+  const onChange = (e) => {
+    const { name, value, checked, type } = e.target;
+    const newVal = type === "checkbox" ? checked : value;
+    // formValidation({ ...form, [name]: newVal });
+  };
+
+  const submitForm = (e) => {
+    e.preventDefault();
+    console.log(form);
+    axios
+      .post("https://reqres.in/api/orders", form)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.error(err));
+    // .finally(setFormValues(initialFormValues));
   };
 
   return (
     <div>
+      <p>{formErrors}</p>
       <h2>Lets start building your pizza!</h2>
       <form onSubmit={submitForm} id="byo-form">
-        <label>Whats your Name?</label>
+        <label>Name</label>
         <input
           type="text"
           name="name"
           placeholder="Name"
-          value={name}
+          value={form.name}
           onChange={onChange}
         />
 
@@ -60,13 +71,13 @@ const Form = (props) => {
           type="email"
           name="email"
           placeholder="Email"
-          value={email}
+          value={form.email}
           onChange={onChange}
         />
 
         <label>
           Pizza Size:
-          <select value={values.size} name="size" onChange={onChange}>
+          <select value={form.size} name="size" onChange={onChange}>
             <option value="small">Small - 10" </option>
             <option value="medium">Medium - 12"</option>
             <option value="large">Large - 16"</option>
@@ -76,7 +87,7 @@ const Form = (props) => {
 
         <label>
           Choose your sauce:
-          <select value={values.sauce} name="sauce" onChange={onChange}>
+          <select value={form.sauce} name="sauce" onChange={onChange}>
             <option value="marinara">Marinara </option>
             <option value="pesto">Garlic Pesto</option>
             <option value="bbq">BBQ Sauce"</option>
@@ -90,50 +101,39 @@ const Form = (props) => {
             type="checkbox"
             id="toppings"
             name="pepperoni"
-            checked={topping}
+            checked={form.toppings}
             onChange={onChange}
           />
           <input
             type="checkbox"
             id="toppings"
             name="chicken"
-            checked={topping}
+            checked={form.toppings}
             onChange={onChange}
           />
           <input
             type="checkbox"
             id="toppings"
             name="bacon"
-            checked={topping}
+            checked={form.toppings}
             onChange={onChange}
           />
           <input
             type="checkbox"
             id="toppings"
             name="cheese"
-            checked={topping}
+            checked={form.toppings}
             onChange={onChange}
           />
+        </label>
+        <label>
+          Any special requests?
           <input
-            type="checkbox"
-            id="toppings"
-            name="olives"
-            checked={topping}
             onChange={onChange}
-          />
-          <input
-            type="checkbox"
-            id="toppings"
-            name="arugula"
-            checked={topping}
-            onChange={onChange}
-          />
-          <input
-            type="checkbox"
-            id="toppings"
-            name="jalapenos"
-            checked={topping}
-            onChange={onChange}
+            type="text"
+            id="specialreq"
+            name="request"
+            value={form.request}
           />
         </label>
 
