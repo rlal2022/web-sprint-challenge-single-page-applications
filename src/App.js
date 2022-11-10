@@ -11,8 +11,9 @@ const App = () => {
         <div>
           <nav>  
             <Link to="/">Home</Link>
-            <Link to="/pizza"><button id="order-pizza"></button></Link>
-          Order Here
+            <br></br>
+            <Link to="/pizza"><button id="order-pizza">Click Here</button></Link>
+          
           </nav>
 
           <Route path="/" component={Home}></Route>

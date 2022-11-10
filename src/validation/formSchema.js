@@ -14,8 +14,11 @@ const formSchema = yup.object().shape({
     .boolean()
     .oneOf(["marinara", "pesto", "bbq", "alfredo"])
     .required("Choose your sauce base"),
-  toppings: yup.boolean(),
-  request: yup.string(),
+    pepperoni: yup.boolean(),
+    chicken: yup.boolean(),
+    bacon: yup.boolean(),
+    cheese: yup.boolean(),
+    request: yup.string(),
 });
 
 export default formSchema;

@@ -149,7 +149,7 @@ yup
         </label>
 
         <div className="submit">
-          <button>Submit your order</button>
+          <button name="order-button" id="order-button" type="submit">Submit your order</button>
         </div>
       </form>
     </div>
